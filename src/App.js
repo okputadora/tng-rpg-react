@@ -6,26 +6,26 @@ import CharacterBox from './components/CharacterBox'
 // would like to get this from an external file or request to the server
 const characters = [
   {
-    name: "Darth Maul",
-    image: "",
+    name: "Captain Picard",
+    image: "/images/picard.jpg",
     health: 190,
     power: 13
   },
   {
-    name: "Han Solo",
-    image: "",
+    name: "The Borg",
+    image: "/images/borg.jpg",
     health: 200,
     power: 19
   },
   {
-    name: "Luke Skywalker",
-    image: "",
+    name: "Data",
+    image: "/images/data.jpg",
     health: 150,
     power: 28
   },
   {
-    name: "Princess Leia",
-    image: "",
+    name: "Q",
+    image: "images/q.jpg",
     health: 60,
     power: 45
   }
@@ -37,18 +37,33 @@ class App extends Component {
     this.state = {
       yourCharacter: characters,
       enemies: [],
-      defender: []
-
+      defender: [],
+      instruction: "Choose a player"
     }
+    this.gameOn = false
   }
   componentDidMount(){
     // initialization that requires DOM or request to remote endpoint
     // should go here
   }
 
-  handleClick(e){
-    console.log("click")
-    console.log(e.target.id)
+  handleClick(name){
+    console.log(name)
+    if (!this.gameOn){
+      this.gameOn = true
+      var yourCharacter
+      characters.forEach((elem, i) => {
+        if(elem.name == name){
+          console.log("names match")
+          yourCharacter = elem
+          characters.splice(i, 1)
+        }
+      })
+    }
+    this.setState({
+      yourCharacter: [yourCharacter],
+      enemies: characters
+    })
   }
 
   render() {
@@ -56,9 +71,10 @@ class App extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <h1 className="App-title">TNGRPG w/ react</h1>
         </header>
-        <CharacterBox characters={this.state.yourCharacter} onClick={(e) => this.handleClick(e)}/>
+        <h1>{this.state.instruction}</h1>
+        <CharacterBox characters={this.state.yourCharacter} onClick={(name) => this.handleClick(name)}/>
         <CharacterBox characters={this.state.enemies} />
         <CharacterBox characters={this.state.defender} />
 

@@ -10,7 +10,7 @@ class CharacterBox extends Component{
           name={character.name}
           image={character.image}
           health={character.health}
-          onClick={this.props.onClick}
+          onClick={(name) => this.props.onClick(name)}
           key={i}
         />
       )
