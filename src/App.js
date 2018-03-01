@@ -73,7 +73,14 @@ class App extends Component {
   selectOpponent(name){
     if (this.gameOn && !this.opSelected){
       this.gameOn = true
-      var instruction = "Begin Attacking"
+      var instruction = (
+        <button
+          className="btn btn-deault"
+          // what exactly is going on here, why did I need to bind
+          // this
+          onClick={this.attack.bind(this)}>Click to Attack
+        </button>
+      )
       var opponent = []
       console.log(name)
       characters.forEach((elem, i) => {
@@ -92,21 +99,49 @@ class App extends Component {
       })
     }
   }
+  attack(){
+    console.log("attacking")
+    console.log(this.state.yourCharacter)
+    var yourCharacter = this.state.yourCharacter[0]
+    var opponent = this.state.opponent[0]
+    opponent.health -= yourCharacter.power
+    // check to see if the opponent is beaten
+    if (opponent.health <= 0){
+      console.log("opponent beaten")
+      // remove from opponent container
+      var instruction = (this.state.enemies.length === 0) ?
+        "You've won" : "You beat " +opponent.name+" select another enemy"
+      this.setState({
+        opponent: [],
+        instruction: instruction,
+        opponentH2: ""
+      })
+    }
+    else{
+      this.setState({
+        yourCharacter: [yourCharacter],
+        opponent: [opponent],
+      })
+    }
+  }
 
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
+      <div>
+        <header className="App-header text-center">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">TNGRPG w/ react</h1>
         </header>
-        <h1>{this.state.instruction}</h1>
-        <CharacterBox characters={this.state.yourCharacter} onClick={(name) => this.selectCharacter(name)}/>
-        <h2>{this.state.opponentH2}</h2>
-        <CharacterBox characters={this.state.opponent} />
-        <h2>{this.state.enemyH2}</h2>
-        <CharacterBox characters={this.state.enemies} onClick={(name) => this.selectOpponent(name)}/>
+        <div className="App container-fluid">
+          <h1 className="text-left">{this.state.instruction}</h1>
+          <CharacterBox characters={this.state.yourCharacter} onClick={(name) => this.selectCharacter(name)}/>
+          <h2 className="text-left">{this.state.opponentH2}</h2>
+          <CharacterBox characters={this.state.opponent} />
+          <h2 className="text-left">{this.state.enemyH2}</h2>
+          <CharacterBox characters={this.state.enemies} onClick={(name) => this.selectOpponent(name)}/>
+        </div>
       </div>
+
     );
   }
 }
