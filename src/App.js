@@ -15,19 +15,19 @@ const characters = [
     name: "The Borg",
     image: "/images/borg.jpg",
     health: 200,
-    power: 19
+    power: 7
   },
   {
     name: "Data",
     image: "/images/data.jpg",
     health: 150,
-    power: 28
+    power: 15
   },
   {
     name: "Q",
     image: "images/q.jpg",
     health: 60,
-    power: 45
+    power: 30
   }
 ]
 
@@ -42,14 +42,10 @@ class App extends Component {
       enemyH2: "",
       opponentH2: "",
     }
+    this.initialState = this.state
     this.gameOn = false
     this.oppSelected = false
   }
-  componentDidMount(){
-    // initialization that requires DOM or request to remote endpoint
-    // should go here
-  }
-
   selectCharacter(name){
     if (!this.gameOn){
       this.gameOn = true
@@ -62,6 +58,9 @@ class App extends Component {
           characters.splice(i, 1)
         }
       })
+      // add property base power to the character you pick
+      // so we know how much to increase its power each time it attacks
+      yourCharacter.basePower = yourCharacter.power
       this.setState({
         yourCharacter: [yourCharacter],
         enemies: characters,
@@ -108,7 +107,9 @@ class App extends Component {
     // check to see if the opponent is beaten
     if (opponent.health <= 0){
       console.log("opponent beaten")
-      // remove from opponent container
+      // if that was the last opponent game is over
+      // else select another opponent and reset attack power
+      yourCharacter.power = yourCharacter.basePower
       var instruction = (this.state.enemies.length === 0) ?
         "You've won" : "You beat " +opponent.name+" select another enemy"
       this.setState({
@@ -118,10 +119,22 @@ class App extends Component {
       })
     }
     else{
+      // incur the counterAttack
+      yourCharacter.health -= opponent.power
+      if (yourCharacter.health <= 0){
+        this.setState({
+          instruction: "You've lost"
+        })
+      }
+      console.log(yourCharacter.health)
+      // increase attack power
+      yourCharacter.power += yourCharacter.basePower
+      console.log("power "+yourCharacter.power)
       this.setState({
         yourCharacter: [yourCharacter],
         opponent: [opponent],
       })
+
     }
   }
 
