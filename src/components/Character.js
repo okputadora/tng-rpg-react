@@ -1,11 +1,11 @@
 import React from 'react'
-
+import style from './characterStyle'
 function Character(props) {
   return(
-    <div className="character" onClick={props.onClick}>
+    <div className="character" style={style.character} onClick={props.onClick}>
       <div className="name" id={props.name}>{props.name}</div>
-      <div className="image">{props.image}</div>
-      <div className="health">{props.health}</div>
+      <img height="200" src={props.image} />
+      <div className="health">Health: <strong>{props.health}</strong></div>
     </div>
   )
 }
