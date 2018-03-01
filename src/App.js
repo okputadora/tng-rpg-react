@@ -37,33 +37,60 @@ class App extends Component {
     this.state = {
       yourCharacter: characters,
       enemies: [],
-      defender: [],
-      instruction: "Choose a player"
+      opponent: [],
+      instruction: "Choose a player",
+      enemyH2: "",
+      opponentH2: "",
     }
     this.gameOn = false
+    this.oppSelected = false
   }
   componentDidMount(){
     // initialization that requires DOM or request to remote endpoint
     // should go here
   }
 
-  handleClick(name){
-    console.log(name)
+  selectCharacter(name){
     if (!this.gameOn){
       this.gameOn = true
       var yourCharacter
+      var instruction = "Select your first opponent from enemies"
+      // find the clicked character in the array of character objects
       characters.forEach((elem, i) => {
-        if(elem.name == name){
-          console.log("names match")
+        if(elem.name === name){
           yourCharacter = elem
           characters.splice(i, 1)
         }
       })
+      this.setState({
+        yourCharacter: [yourCharacter],
+        enemies: characters,
+        instruction: instruction,
+        enemyH2: "Enemies"
+      })
     }
-    this.setState({
-      yourCharacter: [yourCharacter],
-      enemies: characters
-    })
+  }
+  selectOpponent(name){
+    if (this.gameOn && !this.opSelected){
+      this.gameOn = true
+      var instruction = "Begin Attacking"
+      var opponent = []
+      console.log(name)
+      characters.forEach((elem, i) => {
+        if(elem.name === name){
+          console.log(elem)
+          console.log("names match")
+          opponent.push(elem)
+          characters.splice(i, 1)
+        }
+      })
+      this.setState({
+        opponent: opponent,
+        enemies: characters,
+        instruction: instruction,
+        opponentH2: "Opponent"
+      })
+    }
   }
 
   render() {
@@ -74,10 +101,11 @@ class App extends Component {
           <h1 className="App-title">TNGRPG w/ react</h1>
         </header>
         <h1>{this.state.instruction}</h1>
-        <CharacterBox characters={this.state.yourCharacter} onClick={(name) => this.handleClick(name)}/>
-        <CharacterBox characters={this.state.enemies} />
-        <CharacterBox characters={this.state.defender} />
-
+        <CharacterBox characters={this.state.yourCharacter} onClick={(name) => this.selectCharacter(name)}/>
+        <h2>{this.state.opponentH2}</h2>
+        <CharacterBox characters={this.state.opponent} />
+        <h2>{this.state.enemyH2}</h2>
+        <CharacterBox characters={this.state.enemies} onClick={(name) => this.selectOpponent(name)}/>
       </div>
     );
   }
