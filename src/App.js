@@ -6,7 +6,7 @@ import CharacterBox from './components/CharacterBox'
 // would like to get this from an external file or request to the server
 const characters = [
   {
-    name: "Captain Picard",
+    name: "Jean-Luc Picard",
     image: "/images/picard.jpg",
     health: 190,
     power: 13
@@ -14,8 +14,8 @@ const characters = [
   {
     name: "The Borg",
     image: "/images/borg.jpg",
-    health: 200,
-    power: 7
+    health: 150,
+    power: 10
   },
   {
     name: "Data",
@@ -26,7 +26,7 @@ const characters = [
   {
     name: "Q",
     image: "images/q.jpg",
-    health: 60,
+    health: 90,
     power: 30
   }
 ]
@@ -81,11 +81,8 @@ class App extends Component {
         </button>
       )
       var opponent = []
-      console.log(name)
       characters.forEach((elem, i) => {
         if(elem.name === name){
-          console.log(elem)
-          console.log("names match")
           opponent.push(elem)
           characters.splice(i, 1)
         }
@@ -124,6 +121,8 @@ class App extends Component {
       if (yourCharacter.health <= 0){
         this.setState({
           instruction: "You've lost"
+          // would be nice if I saved that initialState and then
+          // just went back to it
         })
       }
       console.log(yourCharacter.health)
@@ -134,10 +133,12 @@ class App extends Component {
         yourCharacter: [yourCharacter],
         opponent: [opponent],
       })
-
     }
   }
+  // well clearly this doesn't seem like the optimal solution
+  doNothing(){
 
+  }
   render() {
     return (
       <div>
@@ -149,7 +150,7 @@ class App extends Component {
           <h1 className="text-left">{this.state.instruction}</h1>
           <CharacterBox characters={this.state.yourCharacter} onClick={(name) => this.selectCharacter(name)}/>
           <h2 className="text-left">{this.state.opponentH2}</h2>
-          <CharacterBox characters={this.state.opponent} />
+          <CharacterBox characters={this.state.opponent} onClick={(name) => this.doNothing(name)} />{/* this needs to be unclickable */}
           <h2 className="text-left">{this.state.enemyH2}</h2>
           <CharacterBox characters={this.state.enemies} onClick={(name) => this.selectOpponent(name)}/>
         </div>
